@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore"
 import { getDatabase } from "firebase/database";
+import { getAuth } from "firebase/auth"
 import AWS from 'aws-sdk';
 
 import {
@@ -61,6 +62,7 @@ export default class BackendPlugin {
     this._firebaseApp = initializeApp(firebaseConfig)
     this._firebaseDb = getDatabase(this._firebaseApp)
     this._firestoreDb = getFirestore(this._firebaseApp)
+    this._firebaseAuth = getAuth(this._firebaseApp)
 
     this._amazonS3 = new AWS.S3(amazonS3Config)
     this._awsBucket = process.env.VUE_APP_AWS_BUCKET_NAME

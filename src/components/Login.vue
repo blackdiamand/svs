@@ -1,125 +1,64 @@
 <template>
-  <div class="buttons">
-    <a
+  <div class="login-block">
+    <div
       v-if="!$auth.isAuthenticated"
-      class="button is-dark"
-      @click="login"
+      class="buttons"
     >
-      Log in with Discord
-    </a>  <router-link
+      <button
+        class="button"
+        @click="login"
+      >
+        Log in with Discord
+      </button>
+    </div>
+    <div
       v-if="$auth.isAuthenticated"
-      to="/profile"
-      class="button is-dark is-inverted"
+      class="buttons"
     >
-      <span class="icon is-small">
-        <i class="fas fa-user" />
-      </span> <span>
-        {{ $auth.user.name }}</span>
-    </router-link>
-    <button
-      v-if="$auth.isAuthenticated"
-      class="button is-dark"
-      @click="logout"
-    >
-      Log out
-    </button>
+      <router-link
+        to="/profile"
+      >
+        <button class="button">
+          <span class="icon is-small"><i class="fas fa-user"></i></span>
+          <span>{{ user.name }}</span>
+        </button>
+      </router-link>
+      <button
+        class="button"
+        @click="logout"
+      >
+        Log out
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
-const axios = require("axios");
-import { getAuth, onAuthStateChanged, signInWithCustomToken, signOut  } from "firebase/auth";
-import {app} from "@/assets/db.js"
-const FIREBASE_APP = app;
 
-const auth = getAuth();
 export default {
   name: "Login",
-  data:function(){return {
-    test:""
-  }},
-  updated : function() {
-    
-    if(this.$auth.isAuthenticated){
-        let str = this.$auth.user.sub
-        let person = (str.split("|"));
-        this.fAuth(person[2]);
+  data () {
+    return {
+
     }
-    
-    
   },
-  mounted: function () {
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uid = user.uid;
-      this.$store.commit("set_uid",uid);
-    } else {
-      //this.$store.commit("set_uid",uid);
+  computed: {
+    user () {
+      return this.$auth.user
     }
-  });
+  },
+  mounted () {
+    console.log(this.$auth)
   },
   methods: {
-    login: function () {
-      this.$auth.loginWithRedirect();
+    login () {
+      console.log("Login")
+      this.$auth.loginWithRedirect()
     },
-
-    fAuth: function (uid) {
-      axios
-        .get(process.env.VUE_APP_SVS_BACKEND_SERVER+"/authenticate", {
-          params: { uid: uid },
-        })
-        .then( (response) => {
-    
-            let token = response.data;
-              signInWithCustomToken(auth,token)
-              .then((userCredential) => {
-                // Signed in
-                var user = userCredential.user;
-                this.$store.commit("set_uid",user.uid);
-              })
-              .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-              });
-        
-        });
-    },
-
-    logout: function () {
-      signOut(auth).then(() => {
-        this.$store.commit("set_profile",undefined);
-        this.$store.commit("set_uid",undefined);
-      this.$auth.logout({
-        returnTo: window.location.origin,
-      });
-
-
-      })
-      
-    },
-  },
-};
-
+    logout () {
+      console.log("Log out")
+    }
+  }
+}
 
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
-
-
-// TODO: AUTOROUTE TO PROFILE

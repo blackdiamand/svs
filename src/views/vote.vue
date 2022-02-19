@@ -11,7 +11,7 @@
         Sorry, voting is currently closed
       </h1>
     </div>
-  </div>  
+  </div>
 
   <div
     v-else-if="typeof this.$store.state._uid == 'undefined'"
@@ -186,7 +186,7 @@
 <script>
 import {ref, get, child, set} from 'firebase/database'
 import ChoosePool from '../components/ChoosePoolButton.vue'
-import {rtdb} from "@/assets/db.js"
+import {rtdb} from "@/assets/old-db.js"
 
 //Create Reference for Database
 const dbRef = ref(rtdb);
@@ -317,7 +317,7 @@ mounted () {
       }).catch((error) => {
         console.error(error);
       });
-      
+
        let ballot_location = `realTimeVoting/pools/` + this.$data.pool[0] + '/' + this.$store.state._uid
 
        set(child(dbRef, ballot_location), JSON.parse(JSON.stringify(voteData.slice(1,(voteData.length)))))
