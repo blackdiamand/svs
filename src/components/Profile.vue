@@ -1,24 +1,17 @@
 <template>
-  <div>
-    <img
-      :src="profile.icon"
-      alt=""
-      class="image"
-    >
-
-    {{ profile.name }} |
-    {{ profile.tag }} |
-    {{ profile.isStaff }} | 
-    {{ profile.isLeaders }} |
-    <button
-      class="button"
-      @click="pullData"
-    >
-      <span class="icon">
-        <i class="fas fa-sync" />
-      </span> <span> Re-sync Profile</span>
-    </button>
-  </div>
+  <section class="profile">
+    <div class="columns">
+      <div class="column is-three-quarters">
+        <img
+          :src="user.picture"
+          width="180"
+        >
+        <h2 class="server-name">
+          {{ user.nickname }}
+        </h2>
+      </div>
+    </div>
+  </section>
 </template>
 
 
@@ -27,38 +20,44 @@
 const axios = require("axios");
 
 export default {
-    data(){
-        return{
-            profile:{icon:"https://i.pravatar.cc/150"}
-        }
-    },
-    mounted(){
-         this.$nextTick(() => {
-       setTimeout(() => {
-         this.pullData();
-       }, 1000); 
-      });
-    },
-    methods:{
-        pullData(){
-let storedProfile = this.$store.state.profile;
-            let uid = this.$store.state._uid;
-            if(storedProfile){
-                this.$set(profile,storedProfile);
-            }
-            else if(uid != undefined){
-                 axios
-        .get(process.env.VUE_APP_SVS_BACKEND_SERVER+`/users/${uid}`)
-        .then( (response)=>{
-        this.$store.commit("set_profile", response.data);
-        this.profile = response.data;
+  props: {
+    user: {
+      required: true
+    }
+  },
+  data(){
+      return{
+          profile:{icon:"https://i.pravatar.cc/150"}
+      }
+  },
+  computed: {
+  },
+  mounted(){
 
- });
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.pullData();
+      }, 1000);
+    });
+  },
+  methods:{
+    pullData(){
+      let storedProfile = this.$store.state.profile;
+      let uid = this.$store.state._uid;
+      if(storedProfile) {
+        this.$set(profile,storedProfile);
+      }
+      else if(uid != undefined) {
+        axios
+          .get(process.env.VUE_APP_SVS_BACKEND_SERVER+`/users/${uid}`)
+          .then( (response)=>{
+              this.$store.commit("set_profile", response.data);
+              this.profile = response.data;
+            });
 
-            }}
-
-
-    },
+      }
+    }
+  }
 }
 </script>
 

@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <Profile />
+  <div class="container">
+    <div style="height: 100px;"></div>
+    <profil :user="user"/>
   </div>
 </template>
 
@@ -10,9 +11,17 @@
 import Profile from "@/components/Profile.vue"
 export default {
   components: {
-    Profile
+    'profil': Profile
   },
-} 
+  computed: {
+    user () {
+      return this.$auth.user
+    }
+  },
+  mounted() {
+    console.log(this.$auth.user)
+  }
+}
 </script>
 
 

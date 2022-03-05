@@ -19,8 +19,6 @@
           <div class="column is-three-quarters">
             <h1 class="server-name">
               {{ name }}
-              <!-- <button class="fab-button"> -->
-              <!-- </button> -->
             </h1>
 
             <p

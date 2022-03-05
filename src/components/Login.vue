@@ -54,9 +54,12 @@ export default {
     login () {
       console.log("Login")
       this.$auth.loginWithRedirect()
+        .then(res => { console.log(res) })
     },
     logout () {
       console.log("Log out")
+      this.$auth.logout()
+      .then(res => { console.log(res) })
     }
   }
 }
